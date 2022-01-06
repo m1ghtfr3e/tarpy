@@ -33,7 +33,7 @@ def should_exclude(path: str, exclusions: list[str]) -> bool:
     '''
     return any(fnmatch.fnmatch(path, exclude) for exclude in exclusions)
 
-def filter_paths(source: str, rule: Callable[str], exclusions: list[str]) -> Iterable[str]:
+def filter_paths(source: str, rule: Callable[..., str], exclusions: list[str]) -> Iterable[str]:
     ''' Filter Paths
 
     It is filtering out paths like defined in

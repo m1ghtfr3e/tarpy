@@ -39,7 +39,7 @@ def cliparser() -> Any:
             )
     parser.add_argument(
             '-m',
-            choices=['archive', 'extract'],
+            choices=['w', 'e'],
             help = 'Which Operation to run.'
             )
 
@@ -86,6 +86,12 @@ def cli() -> Any:
     if args.verbose:
         LOGGER.addHandler(CONSOLE_HANDLER)
 
-    # handler = TarArchive(root, target, ex_file, compression, mode)
+    handler = Tarpy(
+            mode,
+            root = root,
+            target = target,
+            exclude_file = exclude_file,
+            compression = compression,
+            )
     LOGGER.info('Initialized Tarpy.')
     return handler()

@@ -13,6 +13,7 @@ from __future__ import annotations
 import os
 import tarfile
 import traceback
+from datetime import datetime
 
 # Internal Imports
 from tarpy.config import SETTINGS
@@ -97,9 +98,11 @@ class Tarpy(TarpyOptions):
 
         # The ending of the archive name is changing
         # if and depending on the compression method
-        # set. 
+        # set.
+        if not self.archive_name:
+            self.archive_name = f'{str(real_path(self.target))}/TARpy_{datetime.today().strftime("%Y%m%d")}.tar'
         if self.compression:
-            self.archive_name += '.{self.compression}'
+            self.archive_name += f'.{self.compression}'
 
         self._exclusions = self.set_exclusions()
 
@@ -151,7 +154,7 @@ class Tarpy(TarpyOptions):
                 f'w:{self.compression if self.compression else ""}'
         ) as tar_f:
 
-            for path in filtered_walk(real_path(self.start_point), self.exclusions):
+            for path in filtered_walk(real_path(self.root), self._exclusions):
                 # The recursive option
                 # should be set to False.
                 # Catch Errors
@@ -166,7 +169,7 @@ class Tarpy(TarpyOptions):
                     pass
                 except Exception as unknown_error:
                     LOGGER.error(f'[!] [UNKNOWN] {traceback.format_exc()}')
-        LOGGER.info(f'[SUCCESS] Archive written to "{self.target_dir}".')
+        LOGGER.info(f'[SUCCESS] Archive written to "{self.target}".')
 
     def tar_extractor(self) -> None:
         ''' Extract TAR Archive
@@ -174,10 +177,10 @@ class Tarpy(TarpyOptions):
         Method for extracting the archive.
         '''
         if self.target_dir:
-            LOGGER.debug('Jump to %s' % self.target_dir)
-            os.chdir(self.target_dir)
+            LOGGER.debug('Jump to %s' % self.target)
+            os.chdir(self.target)
         with tarfile.open(
-                self.start_point,
+                self.root,
                 'r'
         ) as tar_f:
             try:
@@ -186,7 +189,7 @@ class Tarpy(TarpyOptions):
             except PermissionError as error_msg:
                 LOGGER.error(error_msg)
                 pass
-        LOGGER.info(f'[SUCCESS] Archive extracted to "{self.target_dir}".')
+        LOGGER.info(f'[SUCCESS] Archive extracted to "{self.target}".')
 
     def __repr__(self) -> str:
         return (f'Class: {self.__class__.__name__!r}\n'

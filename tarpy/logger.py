@@ -63,7 +63,7 @@ class CustomFormatter(logging.Formatter):
         ''' format
 
         Returns a formatted Log.
-        
+
         Parameters
         ----------
         record : logging.LogRecord
@@ -104,8 +104,8 @@ CONSOLE_HANDLER.setFormatter(CustomFormatter())
 # After it is started from the beginnging again.
 #
 ROTATE_HANDLER = logging.handlers.RotatingFileHandler(
-        SETTINGS['SETTINGS']['logs-file'], 
-        maxBytes=10000000, 
+        SETTINGS['SETTINGS']['logs-file'],
+        maxBytes=10000000,
         backupCount=10,
         encoding='utf-8'
         )
