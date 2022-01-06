@@ -5,12 +5,9 @@ import os
 import setuptools
 
 
-with open(os.path.join(os.path.dirname(__file__), 'tarpy/VERSION'), 'r') as f:
-    VERSION = f.read().strip()
-
 setuptools.setup(
         name='tarpy',
-        version=VERSION,
+        version='0.0.4',
         author='m1ghtfr3e',
         description='Python Version of tar.',
         packages=setuptools.find_packages(),
