@@ -14,6 +14,7 @@ import os
 import tarfile
 import traceback
 from datetime import datetime
+from typing import Any, Tuple
 
 # Internal Imports
 from tarpy.config import SETTINGS
@@ -64,7 +65,7 @@ class TarpyOptions:
     ]
     __slots__ = possible_vars
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs: Any) -> None:
         # Dynamically set variables.
         for var in self.possible_vars:
             if var in kwargs:
@@ -91,7 +92,7 @@ class Tarpy(TarpyOptions):
     '''
     # EXCLUSIONS = []
 
-    def __init__(self, mode: str, **kwargs) -> None:
+    def __init__(self, mode: str, **kwargs: Any) -> None:
         super().__init__(**kwargs)
 
         self._mode = mode
@@ -106,7 +107,7 @@ class Tarpy(TarpyOptions):
 
         self._exclusions = self.set_exclusions()
 
-    def set_exclusions(self, *excludes) -> list[str]:
+    def set_exclusions(self, *excludes: Tuple[str]) -> list[str]:
         ''' Set own Exclusions
 
         There have to be some program related
@@ -186,8 +187,10 @@ class Tarpy(TarpyOptions):
             try:
                 LOGGER.info('Extraction started.')
                 tar_f.extractall()
-            except PermissionError as error_msg:
-                LOGGER.error(error_msg)
+            except PermissionError as permission_error:
+                LOGGER.error(permission_error)
+            except UnicodeEncodeError as unicode_error:
+                LOGGER.error(unicode_error)
                 pass
         LOGGER.info(f'[SUCCESS] Archive extracted to "{self.target}".')
 

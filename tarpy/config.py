@@ -58,6 +58,10 @@ class ConfigHandler:
         compression =
         exclude-file =
         archive_name =
+
+    [TIMER]
+        enabled =
+        set =
     '''
 
     def __init__(self):
@@ -94,6 +98,7 @@ class ConfigHandler:
         in CONFIG_FILE.
         '''
         self.configs.read(CONFIG_FILE)
+        return self.configs.items('BACKUP')
 
     def add_options(self, options: dict[str:list[str]]) -> None:
         ''' Add Options
