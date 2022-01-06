@@ -76,10 +76,10 @@ class ConfigHandler:
             os.mkdir(CONFIG_DIR)
             os.mkdir(LOG_DIR)
 
-        if not os.path.exists(CONFIG_FILE):
-            self.conf_creator()
-        else:
-            self.conf_reader()
+        # if not os.path.exists(CONFIG_FILE):
+            # self.conf_creator()
+        # else:
+            # self.conf_reader()
 
     def conf_creator(self) -> None:
         ''' Write Config File
@@ -124,3 +124,4 @@ class ConfigHandler:
 
 
 SETTINGS = ConfigHandler().configs
+OPTIONS = ConfigHandler().conf_reader()

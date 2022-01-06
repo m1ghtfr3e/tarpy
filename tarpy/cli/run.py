@@ -7,9 +7,11 @@ Usage:
 '''
 
 import argparse
+import textwrap
 from typing import Any
 from tarpy.tarhandler import Tarpy
 from tarpy.logger import LOGGER, CONSOLE_HANDLER
+from tarpy.config import OPTIONS
 
 def cliparser() -> Any:
     ''' CLI Parser
@@ -19,11 +21,19 @@ def cliparser() -> Any:
     '''
     parser = argparse.ArgumentParser(
             description = 'Different TAR Archive operations.',
-            epilog = 'Python3 version.',
+            epilog = textwrap.dedent('''\
+                Important Notes:
+                    - a mode "-m" has always to be set.
+                    - Edit the Config File to use the
+                      "use_settings" - option.
+                '''),
+            formatter_class=argparse.RawTextHelpFormatter,
             )
     parser.add_argument(
             'ROOT',
             type=str,
+            nargs='?',
+            default=None,
             help='''
             The (starting) directory to archive respectively 
             the file to extract.
@@ -35,6 +45,8 @@ def cliparser() -> Any:
     parser.add_argument(
             'TARGET',
             type=str,
+            nargs='?',
+            default=None,
             help='The path where archive will be written to.'
             )
     parser.add_argument(
@@ -64,24 +76,41 @@ def cliparser() -> Any:
     parser.add_argument(
             '-v',
             '--verbose',
-            help='See Messages.',
+            help='Be Verbose.',
             action='store_true'
             )
 
-    return parser.parse_args()
+    parser.add_argument(
+            '--use_settings',
+            help='Use own Settings.',
+            action='store_true',
+            )
+
+    return parser
 
 def cli() -> Any:
     ''' Core function of CLI
     '''
-    args = cliparser()
+    args = cliparser().parse_args()
 
-    root = args.ROOT
-    target = args.TARGET
-    mode = args.m
+    # If no options are given, print the help.
+    # If there is no "-m" and no "--use_settings",
+    # there is not enough operations to start the
+    # tarpy process.
+    if not args.__dict__['m'] and not args.__dict__['use_settings']:
+        cliparser().print_help()
 
-    # Default Variables.
-    exclude_file = args.exclude_file
-    compression = args.compression
+    # Make sure User does not want to use own settings.
+    if not args.use_settings:
+        root = args.ROOT
+        target = args.TARGET
+        # Default Variables.
+        exclude_file = args.exclude_file
+        compression = args.compression
+        mode = args.m
+
+    else:
+        ...
 
     if args.verbose:
         LOGGER.addHandler(CONSOLE_HANDLER)
