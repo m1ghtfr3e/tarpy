@@ -7,7 +7,7 @@ import setuptools
 
 setuptools.setup(
         name='tarpy',
-        version='0.0.4',
+        version='0.0.5',
         author='m1ghtfr3e',
         description='Python Version of tar.',
         packages=setuptools.find_packages(),
