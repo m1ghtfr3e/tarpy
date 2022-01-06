@@ -1,0 +1,14 @@
+# Development
+venv/
+test/
+
+# Byte / Compiled
+__pycache__/
+*.py[cod]
+
+# Building
+dist/
+build/
+tarpy.egg-info/
+python-tarpy/
+python-tarpy-git/
